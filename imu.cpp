@@ -67,4 +67,3 @@ const std::vector<double>& get_recording_of (const IMUSet& imu, const std::strin
       return rec.values;
   throw std::runtime_error ("missing recording for \"" + label + "\"");
 }
-
