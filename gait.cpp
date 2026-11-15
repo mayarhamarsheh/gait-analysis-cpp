@@ -7,7 +7,6 @@
 #include "imu.h"
 #include "gait.h"
 
-
 std::vector<double> compute_knee_flexion (const IMUSet& imu)
 {
   const auto& thigh_angle = get_recording_of (imu, "THIGH_ANG");
