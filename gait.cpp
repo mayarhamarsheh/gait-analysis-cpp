@@ -1,8 +1,7 @@
 #include <vector>
 #include <stdexcept>
 #include <fstream>
-
-#include <termviz.h>
+#include <algorithm>
 
 #include "debug.h"
 #include "imu.h"
@@ -21,8 +20,6 @@ std::vector<double> compute_knee_flexion (const IMUSet& imu)
   // output useful information if running in debug mode:
   if (debug::verbose_mode) {
     debug::log ("knee flexion:");
-    termviz::figure (768, 256)
-      .plot (knee_flexion);
   }
 
   return knee_flexion;
@@ -43,8 +40,6 @@ std::vector<int> locate_heel_strikes (const IMUSet& imu, double vaccel_threshold
   // output useful information if running in debug mode:
   if (debug::verbose_mode) {
     debug::log ("vertical acceleration:");
-    termviz::figure (768, 256)
-      .plot (vaccel);
 
     std::string times;
     for (const auto t : heel_strikes)
