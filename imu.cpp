@@ -3,8 +3,6 @@
 #include <stdexcept>
 #include <format>
 
-#include <termviz.h>
-
 #include "imu.h"
 #include "debug.h"
 
@@ -50,12 +48,6 @@ IMUSet load_IMU (const std::string& filename)  // always the same just change th
 
   debug::log (std::format ("found {} recordings of length {} in file \"{}\"",
         data.size(), data[0].values.size(), filename));
-
-  if (debug::verbose_mode) {
-    auto fig = termviz::figure (768, 256);
-    for (const auto& v : data)
-      fig.plot (v.values);
-  }
 
   return data;
 }
