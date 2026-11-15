@@ -1,0 +1,46 @@
+name: Build and test
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Get project files
+        uses: actions/checkout@v5
+
+      - name: Install C++ compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++-14
+
+      - name: Compile project
+        run: g++-14 -std=c++20 -Wall -Wextra main.cpp imu.cpp gait.cpp -o gait_analysis
+
+      - name: Run synthetic sample
+        run: |
+          ./gait_analysis sample_synthetic.txt report.txt
+          cat report.txt
+
+      - name: Check expected results
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          lines = Path("report.txt").read_text().splitlines()
+          results = dict(line.split(": ", 1) for line in lines)
+
+          assert results["Heel strikes detected at sample index"].split() == ["0", "31"]
+          assert results["Cycle durations"].split() == ["31"]
+          assert results["Peak knee flexion per cycle"].split() == ["65"]
+          assert float(results["Average peak knee flexion"]) == 65
+          assert results["Recovery status"] == "good"
+
+          print("Synthetic sample test passed.")
+          PY
